@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 //GETZ.<top>.main--> end of main
 //GETZ.<top>.networkRequest--> start
 //GETZ.<top>.networkRequest--> end
-fun main() = runBlocking {
+fun main() = runBlocking<Unit> {
     val job = launch(start = CoroutineStart.LAZY) {
         networkRequest()
     }

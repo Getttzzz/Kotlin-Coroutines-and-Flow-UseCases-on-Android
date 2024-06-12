@@ -11,7 +11,7 @@ import kotlinx.coroutines.runBlocking
 //GETZ.<top>.networkRequest--> start
 //GETZ.<top>.networkRequest--> end
 //GETZ.<top>.main--> end of main
-fun main() = runBlocking {
+fun main() = runBlocking<Unit> {
     val job = launch {
         networkRequest()
     }
