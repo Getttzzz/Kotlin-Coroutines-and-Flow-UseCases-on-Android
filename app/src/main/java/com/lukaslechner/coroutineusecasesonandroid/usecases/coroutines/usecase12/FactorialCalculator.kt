@@ -1,9 +1,10 @@
 package com.lukaslechner.coroutineusecasesonandroid.usecases.coroutines.usecase12
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 import java.math.BigInteger
 
 class FactorialCalculator(
@@ -13,32 +14,28 @@ class FactorialCalculator(
     suspend fun calculateFactorial(
         factorialOf: Int,
         numberOfCoroutines: Int,
-        scope: CoroutineScope,
     ): BigInteger {
 
-        /**
-         * if [numberOfCoroutines] is 3 then it will be 3 subRanges.
-         * */
-        val subRanges: List<SubRange> =
-            scope.async(defaultDispatcher) {
-                createSubRangeList(factorialOf, numberOfCoroutines)
-            }.await()
+        return withContext(defaultDispatcher) {
+            /**
+             * if [numberOfCoroutines] is 3 then it will be 3 subRanges.
+             * */
+            val subRanges: List<SubRange> = createSubRangeList(factorialOf, numberOfCoroutines)
 
-
-        var tempResult = BigInteger.ONE
-        subRanges.forEach { range ->
-            val resultOfSubRange =
-                scope.async(defaultDispatcher) { calculateFactorialOfSubRange(range) }.await()
-            val bigInteger: BigInteger = tempResult.multiply(resultOfSubRange)
-            tempResult = bigInteger
-
+            subRanges.map { subRange ->
+                //inherit dispatcher from parent coroutine
+                async {
+                    println("GETZ.FactorialCalculator.calculateFactorial--> subRange=$subRange coroutine=${this.coroutineContext}")
+                    calculateFactorialOfSubRange(subRange)
+                }
+            }.awaitAll()
+                .fold(BigInteger.ONE) { acc: BigInteger, bigInteger: BigInteger ->
+                    acc.multiply(bigInteger)
+                }
         }
-
-        return tempResult
     }
 
-    // TODO: execute on background thread
-    fun calculateFactorialOfSubRange(
+    private fun calculateFactorialOfSubRange(
         subRange: SubRange
     ): BigInteger {
         var factorial = BigInteger.ONE
@@ -48,7 +45,7 @@ class FactorialCalculator(
         return factorial
     }
 
-    fun createSubRangeList(
+    private fun createSubRangeList(
         factorialOf: Int,
         numberOfSubRanges: Int
     ): List<SubRange> {

@@ -24,14 +24,12 @@ class CalculationInSeveralCoroutinesViewModel(
             var factorialResult = BigInteger.ZERO
             val computationDuration = measureTimeMillis {
                 factorialResult =
-                    factorialCalculator.calculateFactorial(factorialOf, numberOfCoroutines, this)
+                    factorialCalculator.calculateFactorial(factorialOf, numberOfCoroutines)
             }
 
             var resultString = ""
             val stringConversionDuration = measureTimeMillis {
-                resultString = viewModelScope.async {
-                    convertToString(factorialResult, defaultDispatcher)
-                }.await()
+                resultString = convertToString(factorialResult, defaultDispatcher)
             }
 
             uiState.value =
