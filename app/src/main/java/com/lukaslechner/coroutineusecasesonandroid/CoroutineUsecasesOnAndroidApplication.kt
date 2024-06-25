@@ -9,6 +9,9 @@ import timber.log.Timber
 
 class CoroutineUsecasesOnAndroidApplication : Application() {
 
+    // SupervisorJob is necessary here because we don't want have a situation
+    // where child coroutine got failed and it leads to propagate exception up to this
+    // parent job and to cancellation of this job.
     private val applicationScope = CoroutineScope(SupervisorJob())
 
     val androidVersionRepository by lazy {
