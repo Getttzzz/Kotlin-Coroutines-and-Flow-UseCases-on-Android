@@ -9,7 +9,7 @@ import java.math.BigInteger
 //67ms: result=24
 //79ms: result=120
 // Got result not all at once but each iteration.
-// Not I have a data stream!
+// Now I have a data stream!
 // This stream is synchronous.
 // The downside of a sequence that it blocks main thread.
 fun main() {

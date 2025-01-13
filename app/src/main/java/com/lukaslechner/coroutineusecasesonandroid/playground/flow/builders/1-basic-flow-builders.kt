@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOf
  * Basic Flow Builders:
  * 1) flowOf(1,2,3) - create a flow from a fixed set of values.
  * 2) .asFlow() - extension fun on various types to convert them into Flow.
- * 3) flow{} - builder funcrion to construct arbitrary flows from sequential call to the emit function.
+ * 3) flow{} - builder function to construct arbitrary flows from sequential call to the emit function.
  *          flow {
  *              emit("one")
  *              delay(100)
